@@ -8,7 +8,7 @@ import (
 // TestGetRouter Returns a ServeMux pointer with the routes attached to it
 func TestGetRouter(t *testing.T) {
 
-	mux := GetRouter()
+	mux := NewRouter()
 	if mux == nil {
 		t.Fatal("Mux wasn't instantiated")
 	}
