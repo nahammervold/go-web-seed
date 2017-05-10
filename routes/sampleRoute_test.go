@@ -2,9 +2,9 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/nahammervold/go-web-seed/models"
@@ -41,5 +41,14 @@ func TestSampleRoute(t *testing.T) {
 		t.Fatal("Message doesn't contain correct content")
 	}
 
-	fmt.Printf("%s\n", body.Message)
+	msg, err := http.Post(ts.URL, "application/json", strings.NewReader(`{"message": "hello"}`))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if msg.StatusCode != http.StatusMethodNotAllowed {
+		t.Fatal("Message should be rejected")
+	}
+
 }

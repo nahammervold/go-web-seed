@@ -8,5 +8,5 @@ import (
 )
 
 func main() {
-	log.Fatal(http.ListenAndServe(":3000", routes.GetRouter()))
+	log.Fatal(http.ListenAndServe(":3000", routes.NewRouter()))
 }
