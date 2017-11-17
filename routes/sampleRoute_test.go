@@ -15,6 +15,23 @@ func TestSampleRoute(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(SampleRoute))
 	defer ts.Close()
 
+
+	_, err := http.Post(ts.URL, "application/json", strings.NewReader(`{"message": "hello"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = http.Post(ts.URL, "application/json", strings.NewReader(`{"message": "world"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = http.Post(ts.URL, "application/json", strings.NewReader(`{"message": "world"}`))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// Use the get request to get a response object or error
 	res, err := http.Get(ts.URL)
 
@@ -28,7 +45,8 @@ func TestSampleRoute(t *testing.T) {
 		t.Fatal("Content-Type was not set to JSON")
 	}
 
-	var body models.SampleModel
+	body := make([]models.SampleModel,0)
+
 	err = json.NewDecoder(res.Body).Decode(&body)
 	res.Body.Close()
 
@@ -36,19 +54,7 @@ func TestSampleRoute(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Check for errors in res.Body
-	if body.Message != "Hello world" {
-		t.Fatal("Message doesn't contain correct content")
+	if len(body) != 3 {
+		t.Fatal("Should be of length 3")
 	}
-
-	msg, err := http.Post(ts.URL, "application/json", strings.NewReader(`{"message": "hello"}`))
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if msg.StatusCode != http.StatusMethodNotAllowed {
-		t.Fatal("Message should be rejected")
-	}
-
 }
